@@ -1,62 +1,78 @@
-// Initial array of quote objects
+// script.js
+
+// Initial quotes array
 let quotes = [
-  { text: "The only limit to our realization of tomorrow is our doubts of today.", category: "Inspiration" },
-  { text: "Life is what happens when you're busy making other plans.", category: "Life" },
-  { text: "Code is like humor. When you have to explain it, it’s bad.", category: "Tech" }
+  { text: "The best way to predict the future is to invent it.", category: "Inspiration" },
+  { text: "Simplicity is the soul of efficiency.", category: "Productivity" },
+  { text: "Code is like humor. When you have to explain it, it’s bad.", category: "Programming" }
 ];
 
-/**
- * Displays a random quote from the array
- */
+// DOM references
+const quoteDisplay = document.getElementById("quoteDisplay");
+const newQuoteBtn = document.getElementById("newQuote");
+
+// Function: Show random quote
 function showRandomQuote() {
-  const quoteDisplay = document.getElementById('quoteDisplay');
-  
-  // Select a random index
+  if (quotes.length === 0) {
+    quoteDisplay.textContent = "No quotes available. Please add one!";
+    return;
+  }
   const randomIndex = Math.floor(Math.random() * quotes.length);
-  const randomQuote = quotes[randomIndex];
+  const { text, category } = quotes[randomIndex];
 
-  // Clear previous content and create new elements
-  quoteDisplay.innerHTML = ''; 
-  
-  const quoteText = document.createElement('p');
-  quoteText.textContent = `"${randomQuote.text}"`;
-  quoteText.style.fontStyle = 'italic';
+  // Clear previous content
+  quoteDisplay.innerHTML = "";
 
-  const quoteCategory = document.createElement('span');
-  quoteCategory.textContent = `- Category: ${randomQuote.category}`;
-  quoteText.style.fontWeight = 'bold';
+  // Create DOM elements dynamically
+  const quoteText = document.createElement("p");
+  quoteText.textContent = `"${text}"`;
 
-  // Append new elements to the DOM
+  const quoteCategory = document.createElement("span");
+  quoteCategory.textContent = `— ${category}`;
+  quoteCategory.style.fontStyle = "italic";
+  quoteCategory.style.color = "gray";
+
+  // Append to display
   quoteDisplay.appendChild(quoteText);
   quoteDisplay.appendChild(quoteCategory);
 }
 
-/**
- * Adds a new quote to the array and updates the interface
- */
+// Function: Add new quote
 function addQuote() {
-  const textInput = document.getElementById('newQuoteText');
-  const categoryInput = document.getElementById('newQuoteCategory');
+  const textInput = document.getElementById("newQuoteText");
+  const categoryInput = document.getElementById("newQuoteCategory");
 
-  const text = textInput.value.trim();
-  const category = categoryInput.value.trim();
+  const newText = textInput.value.trim();
+  const newCategory = categoryInput.value.trim();
 
-  // Basic validation
-  if (text === '' || category === '') {
-    alert("Please fill in both the quote and the category.");
+  if (!newText || !newCategory) {
+    alert("Please enter both quote text and category.");
     return;
   }
 
-  // Update the data array
-  quotes.push({ text: text, category: category });
+  // Add to quotes array
+  quotes.push({ text: newText, category: newCategory });
 
-  // Clear inputs for the next entry
-  textInput.value = '';
-  categoryInput.value = '';
+  // Clear inputs
+  textInput.value = "";
+  categoryInput.value = "";
 
+  // Feedback
   alert("Quote added successfully!");
 }
 
-// Event Listener for the main button
-document.getElementById('newQuote').addEventListener('click', showRandomQuote);
+// Function: Create Add Quote Form dynamically
+function createAddQuoteForm() {
+  const formContainer = document.createElement("div");
 
+  const textInput = document.createElement("input");
+  textInput.id = "newQuoteText";
+  textInput.type = "text";
+  textInput.placeholder = "Enter a new quote";
+
+  const categoryInput = document.createElement("input");
+  categoryInput.id = "newQuoteCategory";
+  categoryInput.type = "text";
+  categoryInput.placeholder = "Enter quote category";
+
+  const addButton = document.create
