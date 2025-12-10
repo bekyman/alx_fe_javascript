@@ -75,4 +75,23 @@ function createAddQuoteForm() {
   categoryInput.type = "text";
   categoryInput.placeholder = "Enter quote category";
 
-  const addButton = document.create
+  const addButton = document.createElement("button");
+  addButton.textContent = "Add Quote";
+
+  // Attach event listener instead of inline onclick
+  addButton.addEventListener("click", addQuote);
+
+  // Append inputs and button
+  formContainer.appendChild(textInput);
+  formContainer.appendChild(categoryInput);
+  formContainer.appendChild(addButton);
+
+  // Insert into DOM
+  document.body.appendChild(formContainer);
+}
+
+// Event listeners
+newQuoteBtn.addEventListener("click", showRandomQuote);
+
+// Initialize form dynamically
+createAddQuoteForm();
