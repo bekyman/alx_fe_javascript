@@ -27,7 +27,7 @@ function saveLastViewedQuote(quoteObj) {
   sessionStorage.setItem("lastViewedQuote", JSON.stringify(quoteObj));
 }
 
-// Load last viewed quote on startup (optional feature)
+// Load last viewed quote on startup
 function loadLastViewedQuote() {
   const lastQuote = JSON.parse(sessionStorage.getItem("lastViewedQuote"));
   if (lastQuote) {
@@ -117,7 +117,6 @@ function exportToJson() {
 // =======================
 //  JSON IMPORT
 // =======================
-
 function importFromJsonFile(event) {
   const fileReader = new FileReader();
 
@@ -130,11 +129,22 @@ function importFromJsonFile(event) {
         return;
       }
 
-      // Add imported quotes to existing quotes
       quotes.push(...importedQuotes);
-
-      saveQuotes(); // store in localStorage
+      saveQuotes();
 
       alert("Quotes imported successfully!");
     } catch (err) {
       alert("Error reading JSON file");
+    }
+  };
+
+  fileReader.readAsText(event.target.files[0]);
+}
+
+// =======================
+//  EVENT LISTENERS
+// =======================
+newQuoteBtn.addEventListener("click", showRandomQuote);
+
+// Load last viewed quote on startup
+loadLastViewedQuote();
