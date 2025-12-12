@@ -5,7 +5,7 @@
    - Add / Delete quotes
    - Server sync simulation (via JSONPlaceholder)
    - Conflict resolution (server wins)
-   - UI notifications for updates
+   - UI notifications + Browser Alerts
    - Periodic background synchronization
 ============================================================ */
 
@@ -138,7 +138,7 @@ async function fetchQuotesFromServer() {
   // Convert mock posts into quote objects
   return data.slice(0, 10).map(post => ({
     text: post.body,
-    timestamp: Date.now() // JSONPlaceholder does not support timestamps
+    timestamp: Date.now() 
   }));
 }
 
@@ -157,6 +157,9 @@ async function syncQuotes() {
       saveLocalQuotes(serverQuotes);
       renderQuoteList();
 
+      // --- ADDED ALERT HERE ---
+      alert("Quotes synced with server!"); 
+      
       showNotification("Quotes updated from server (conflict resolved).", "warning");
     }
   } catch (err) {
