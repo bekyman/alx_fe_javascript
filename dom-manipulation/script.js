@@ -127,3 +127,7 @@ async function fetchQuotesFromServer() {
 window.onload = function () {
   fetchQuotesFromServer();
 };
+// Load quotes from API when page starts
+window.onload = function () {
+  fetchQuotesFromServer();
+};
