@@ -2,49 +2,148 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dynamic Quote Generator</title>
+
   <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+
     #quoteDisplay {
       margin: 20px 0;
       padding: 15px;
       border-left: 5px solid #333;
+      background: #f5f5f5;
       min-height: 50px;
+      font-size: 18px;
     }
+
     .form-container, .json-controls {
       margin-top: 20px;
+      padding: 15px;
+      border: 1px solid #ddd;
+      background: #fafafa;
+    }
+
+    input, textarea, button {
+      margin-top: 10px;
+      width: 100%;
       padding: 10px;
-      border-top: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    button {
+      cursor: pointer;
+      background: #333;
+      color: #fff;
+      border: none;
     }
   </style>
 </head>
+
 <body>
 
   <h1>Dynamic Quote Generator</h1>
 
-  <div id="quoteDisplay">
-    <p>Click the button to see a quote!</p>
-  </div>
+  <!-- Quote Display -->
+  <div id="quoteDisplay">Click the button to show a random quote...</div>
+  <button onclick="showRandomQuote()">Generate Quote</button>
 
-  <button id="newQuote">Show New Quote</button>
-
-  <!-- Add Quote Form -->
+  <!-- Add New Quote Form -->
   <div class="form-container">
-    <h3>Add a Custom Quote</h3>
-    <input id="newQuoteText" type="text" placeholder="Enter a new quote" />
-    <input id="newQuoteCategory" type="text" placeholder="Enter quote category" />
+    <h3>Add a New Quote</h3>
+
+    <textarea id="newQuote" placeholder="Enter a new quote"></textarea>
+    <input type="text" id="newAuthor" placeholder="Author name">
+
     <button onclick="addQuote()">Add Quote</button>
   </div>
 
-  <!-- JSON Import / Export -->
+  <!-- Save/Load JSON Controls -->
   <div class="json-controls">
-    <h3>Import / Export Quotes (JSON)</h3>
+    <h3>Save & Load Quotes (JSON)</h3>
 
-    <button onclick="exportToJson()">Export Quotes</button>
-    <br /><br />
-
-    <input type="file" id="importFile" accept=".json" onchange="importFromJsonFile(event)" />
+    <input type="file" id="jsonFileInput" accept=".json">
+    <button onclick="loadFromJSON()">Load From JSON</button>
+    <button onclick="downloadJSON()">Download JSON</button>
   </div>
 
-  <script src="script.js"></script>
+  <script>
+    // Load quotes from localStorage or default list
+    let quotes = JSON.parse(localStorage.getItem("quotes")) || [
+      { text: "The best way to predict the future is to create it.", author: "Peter Drucker" },
+      { text: "Success is not final; failure is not fatal.", author: "Winston Churchill" },
+    ];
+
+    // Show a random quote
+    function showRandomQuote() {
+      const random = Math.floor(Math.random() * quotes.length);
+      const q = quotes[random];
+      document.getElementById("quoteDisplay").innerHTML = `"${q.text}" — <b>${q.author}</b>`;
+    }
+
+    // Add a new quote
+    function addQuote() {
+      const text = document.getElementById("newQuote").value.trim();
+      const author = document.getElementById("newAuthor").value.trim();
+
+      if (!text || !author) {
+        alert("Please enter both quote and author.");
+        return;
+      }
+
+      quotes.push({ text, author });
+      localStorage.setItem("quotes", JSON.stringify(quotes));
+
+      document.getElementById("newQuote").value = "";
+      document.getElementById("newAuthor").value = "";
+
+      alert("Quote added successfully!");
+    }
+
+    // Download JSON
+    function downloadJSON() {
+      const blob = new Blob([JSON.stringify(quotes, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+
+      a.href = url;
+      a.download = "quotes.json";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    // Load quotes from JSON file
+    function loadFromJSON() {
+      const fileInput = document.getElementById("jsonFileInput");
+      const file = fileInput.files[0];
+
+      if (!file) {
+        alert("Please select a JSON file first.");
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function (event) {
+        try {
+          const jsonData = JSON.parse(event.target.result);
+          if (!Array.isArray(jsonData)) throw new Error("Invalid JSON format");
+
+          quotes = jsonData;
+          localStorage.setItem("quotes", JSON.stringify(quotes));
+          alert("Quotes loaded successfully!");
+        } catch {
+          alert("Invalid JSON file.");
+        }
+      };
+
+      reader.readAsText(file);
+    }
+  </script>
+
 </body>
 </html>
